@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+var cors = require('cors');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -9,12 +10,18 @@ var usersRouter = require('./routes/user');
 
 var sequelize = require('./models').sequelize;
 
+
 var app = express();
+
+app.use(cors());
 
 sequelize.sync();
 
-var mypage_reviewRouter = require('./routes/mypage_review');
-app.use('/mypage', mypage_reviewRouter);
+var index = require('./routes/index');
+app.use('/index', index);
+
+var mypage = require('./routes/mypage');
+app.use('/mypage', mypage);
 
 var book = require('./routes/book');
 app.use('/book', book);
@@ -27,6 +34,9 @@ app.use('/bookmark', bookmark);
 
 var user = require('./routes/user');
 app.use('/user', user);
+
+var focus = require('./routes/focus');
+app.use('/focus', focus);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
