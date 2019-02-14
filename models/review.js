@@ -2,7 +2,8 @@ module.exports = (sequelize, DataTypes) => {
   return sequelize.define('review', {
     score: {
       type: DataTypes.FLOAT,
-      allowNull: true,
+      allowNull: false,
+      defaultValue: 0
     },
     text: {
       type: DataTypes.TEXT,

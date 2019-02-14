@@ -3,36 +3,47 @@ var express = require("express");
 var models = require("../models");
 var Book = require("../models").Book;
 var router = express.Router();
+var bodyParser = require('body-parser');
+
+const jsonParser = bodyParser.json();
 
 router
   .get("/", async (req, res) => {
     try {
       console.log("**************** ", req.query, " ***************");
 
-      const books = await Book.findAll({
-        where: { id: req.query.book_id }
-      }).then(books => res.json(books));
-    } catch (error) {
+      await Book.findAll({
+        where: { id: req.query.book_id },
+        include: [{
+          model: models.Review,
+          book_id: req.query.book_id
+        }]
+      })
+        .then(books => res.json(books))
+    } 
+    catch (error) {
       console.error(error);
       next(error);
     }
   })
 
-  .post("/", async (req, res) => {
+  .post("/", jsonParser,async (req, res) => {
     try {
       console.log("********** book post ***********");
 
-      const books = await Book.create({
-        title: "title06",
-        author: "author06",
-        isbn: "isbn06",
-        publishedAt: "66666666",
-        description: "description06",
-        image: "image06URL",
-        averageScore: 6,
-        bookmarkCount: 6
-      }).then(books => res.json(books));
-    } catch (error) {
+      await Book.create({
+        title: req.body.title,
+        author: req.body.author,
+        isbn: req.body.isbn,
+        publishedAt: req.body.publishedAt,
+        description: req.body.description,
+        image: req.body.image,
+        averageScore: req.body.averageScore,
+        bookmarkCount: req.body.bookmarkCount
+      })
+        .then(books => res.json(books));
+    } 
+    catch (error) {
       console.error(error);
       next(error);
     }
