@@ -66,14 +66,12 @@ router
     try {
       console.log("*********** review delete **********")
 
-      if (!(await Review.find({
+      if (await Review.find({
         where: {
           user_id: req.body.user_id,
           book_id: req.body.book_id
         }
-      }))) {
-        res.json("회원분이 작성한 리뷰가 아닙니다.")
-      } else {
+      })) {
         await Review.destroy({
           where: {
             user_id: req.body.user_id,
@@ -90,7 +88,8 @@ router
             })
               .then(books => res.json(books))
         })
-
+      } else {
+        res.json("회원분이 작성한 리뷰가 아닙니다.")
       }
     }
     catch (error) {
@@ -104,11 +103,8 @@ router
       console.log("********** review edit **********");
       
       await Review.update(
-        {
-          text: req.body.text
-        },
-        {
-          where: {
+        { text: req.body.text },
+        { where: {
             user_id: req.query.user_id,
             book_id: req.query.book_id
           }
@@ -126,6 +122,32 @@ router
       console.error(error);
       next(error);
     }
-  });
+  })
+
+  // .put("/myscore", jsonParser, async (req, res) => {
+  //   try {
+  //     console.log("********** Myscore edit **********");
+
+  //     await Review.update(
+  //       { score: req.body.score },
+  //       { where: {
+  //           user_id: req.body.user_id,
+  //           book_id: req.body.book_id
+  //         }
+  //       }
+  //     )
+  //       .then(async () => {
+  //         await Review.findAll({
+  //           where: { user_id: req.body.user_id },
+  //           include: { model: models.Book }
+  //         })
+  //           .then(reviews => res.send({ newReviews: reviews }));
+  //     });
+  //   } 
+  //   catch (error) {
+  //     console.error(error);
+  //     next(error);
+  //   }
+  // });
 
 module.exports = router;

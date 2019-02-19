@@ -24,15 +24,30 @@ router
     }
   })
 
-  .delete("/", async (req, res) => {
+  .delete("/", jsonParser, async (req, res) => {
     try {
       console.log("************* mypage_bookmark delete *************");
 
-      await Bookmark.destroy({ where: { id: req.query.id } })
-        .then(async () => {
-          await Bookmark.findAll({ include: [{ model: models.Book }] })
-            .then(bookmarks => res.send({ newBookmarks: bookmarks }));
-      });
+      if (await Bookmark.findOne({
+        where: {
+          book_id: req.body.book_id,
+          user_id: req.body.user_id
+        }
+      })) {
+        await Bookmark.destroy({ 
+          where: { 
+            book_id: req.body.book_id, 
+            user_id: req.body.user_id
+          } 
+        })
+          .then(async () => {
+            await Bookmark.findAll({ include: [{ model: models.Book }] })
+              .then(bookmarks => res.send({ newBookmarks: bookmarks }))
+          });
+      } else {
+        res.json("추가된 북마크가 없습니다")
+      }
+        
     } 
     catch (error) {
       console.error(error);
@@ -44,11 +59,20 @@ router
     try {
       console.log("********** mypage_bookmark post ***********");
 
-      await Bookmark.create({
-        book_id: req.body.book_id,
-        user_id: req.body.user_id
-      })
-        .then(bookmarks => res.json(bookmarks));
+      if (await Bookmark.findOne({ 
+        where: {
+          user_id: req.body.user_id,
+          book_id: req.body.book_id
+        }
+      })) {
+        res.json("이미 북마크에 추가되어 있습니다!")
+      } else {
+        await Bookmark.create({
+          book_id: req.body.book_id,
+          user_id: req.body.user_id
+        })
+          .then(bookmarks => res.json(bookmarks));
+      }
     } 
     catch (error) {
       console.error(error);

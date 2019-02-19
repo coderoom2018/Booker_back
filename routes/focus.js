@@ -62,6 +62,32 @@ router
       console.error(error);
       next(error);
     }
+  })
+
+  .put("/myscore", jsonParser, async (req, res) => {
+    try {
+      console.log("********** Myscore edit **********");
+
+      await Review.update(
+        { score: req.body.score },
+        { where: {
+            user_id: req.body.user_id,
+            book_id: req.body.book_id
+          }
+        }
+      )
+        .then(
+          Review.findAll({
+            where: { user_id: req.body.user_id },
+            include: [{ model: models.Book }]
+          })
+            .then(reviews => res.json(reviews))
+      )
+    } 
+    catch (error) {
+      console.error(error);
+      next(error);
+    }
   });
 
 module.exports = router;
