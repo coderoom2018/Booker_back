@@ -66,6 +66,6 @@ router
       console.error(error);
       next(error);
     }
-  });
+  })
 
 module.exports = router;

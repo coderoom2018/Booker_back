@@ -2,6 +2,7 @@ var express = require("express");
 
 var models = require("../models");
 var Book = require("../models").Book;
+var Review = require("../models").Review;
 var router = express.Router();
 var bodyParser = require('body-parser');
 
@@ -47,6 +48,33 @@ router
       console.error(error);
       next(error);
     }
+  })
+
+  .put("/myscore", jsonParser, async (req, res) => {
+    try {
+      console.log("********** Myscore edit **********");
+
+      await Review.update(
+        { score: req.body.score },
+        { where: {
+            user_id: req.body.user_id,
+            book_id: req.body.book_id
+          }
+        })
+          .then(await Book.findAll({
+            where: { id: req.body.book_id },
+            include: [{
+              model: models.Review,
+              book_id: req.body.book_id
+            }]
+          })
+            .then(books => res.json(books))
+    )} 
+    catch (error) {
+      console.error(error);
+      next(error);
+    }
   });
+
 
 module.exports = router;
