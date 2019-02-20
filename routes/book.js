@@ -17,10 +17,15 @@ router
         where: { id: req.query.book_id },
         include: [{
           model: models.Review,
-          book_id: req.query.book_id
+          book_id: req.query.book_id,
+          include: [{
+            model: models.User,
+            id: req.query.user_id,
+            attributes: ["email"]
+          }]
         }]
       })
-        .then(books => res.json(books))
+      .then(books => res.json(books))
     } 
     catch (error) {
       console.error(error);
@@ -42,7 +47,7 @@ router
         averageScore: req.body.averageScore,
         bookmarkCount: req.body.bookmarkCount
       })
-        .then(books => res.json(books));
+      .then(books => res.json(books));
     } 
     catch (error) {
       console.error(error);
@@ -61,14 +66,14 @@ router
             book_id: req.body.book_id
           }
         })
-          .then(await Book.findAll({
-            where: { id: req.body.book_id },
-            include: [{
-              model: models.Review,
-              book_id: req.body.book_id
-            }]
-          })
-            .then(books => res.json(books))
+        .then(await Book.findAll({
+          where: { id: req.body.book_id },
+          include: [{
+            model: models.Review,
+            book_id: req.body.book_id
+          }]
+        })
+        .then(books => res.json(books))
     )} 
     catch (error) {
       console.error(error);

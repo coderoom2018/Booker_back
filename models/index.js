@@ -36,6 +36,16 @@ db.Bookmark.belongsTo(db.User, {
   targetKey: "id",
 });
 
+db.User.hasMany(db.Book, {
+  foreignKey: "id",
+  source: "id"
+})
+
+db.Book.belongsTo(db.User, {
+  foreignKey: "id",
+  targetKey: "id"
+})
+
 db.Book.hasMany(db.Review, {
   foreignKey: "book_id",
   source: "id",

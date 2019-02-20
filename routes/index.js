@@ -9,7 +9,7 @@ router.get("/", async (req, res) => {
     console.log("**************** Index Books ***************");
 
     await Book.findAll()
-      .then(books => res.json(books));
+    .then(books => res.json(books));
   } 
   catch (error) {
     console.error(error);

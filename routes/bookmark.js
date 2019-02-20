@@ -16,7 +16,7 @@ router
         where: { user_id: req.query.user_id },
         include: [{ model: models.Book }]
       })
-        .then(bookmarks => res.json(bookmarks));
+      .then(bookmarks => res.json(bookmarks));
     } 
     catch (error) {
       console.error(error);
@@ -40,10 +40,10 @@ router
             user_id: req.body.user_id
           } 
         })
-          .then(async () => {
-            await Bookmark.findAll({ include: [{ model: models.Book }] })
-              .then(bookmarks => res.send({ newBookmarks: bookmarks }))
-          });
+        .then(async () => {
+          await Bookmark.findAll({ include: [{ model: models.Book }] })
+          .then(bookmarks => res.send({ newBookmarks: bookmarks }))
+        });
       } else {
         res.json("추가된 북마크가 없습니다")
       }
@@ -71,7 +71,7 @@ router
           book_id: req.body.book_id,
           user_id: req.body.user_id
         })
-          .then(bookmarks => res.json(bookmarks));
+        .then(bookmarks => res.json(bookmarks));
       }
     } 
     catch (error) {
