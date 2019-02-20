@@ -18,7 +18,7 @@ router
           where: { user_id: req.query.user_id },
           include: [{ model: models.Book }]
         })
-          .then(reviews => res.json(reviews));
+        .then(reviews => res.json(reviews));
       } else {
         res.json("등록된 평가가 없습니다")
       }
@@ -39,12 +39,12 @@ router
           user_id: req.body.user_id
         }
       })
-        .then(async () => {
-          await Review.findAll({
-            where: { user_id: req.body.user_id },
-            include: [{ model: models.Book }]
-          })
-            .then(reviews => res.send({ newReviews: reviews }));
+      .then(async () => {
+        await Review.findAll({
+          where: { user_id: req.body.user_id },
+          include: [{ model: models.Book }]
+        })
+        .then(reviews => res.send({ newReviews: reviews }));
       });
     } 
     catch (error) {
@@ -60,7 +60,7 @@ router
       await Bookmark.findAll({
         where: { user_id: req.query.user_id }
       })
-        .then(bookmakrs => res.json(bookmarks));
+      .then(bookmakrs => res.json(bookmarks));
     } 
     catch (error) {
       console.error(error);

@@ -28,7 +28,7 @@ router
           },
           attributes: ['id', 'email']
         })
-          .then(users => res.json(users))
+        .then(users => res.json(users))
       } else {
         res.json("이메일과 비밀번화를 확인해 주세요")
       }
@@ -64,7 +64,7 @@ router
           created_at: Date.now(),
           createdAt: Date.now(),
         })
-          .then(res.json("가입성공"));
+        .then(res.json("가입성공"));
       }
     } 
     catch (error) {

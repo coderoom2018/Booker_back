@@ -19,7 +19,7 @@ router
         },
         include: [{ model: models.Book }]
       })
-        .then(reviews => res.json(reviews));
+      .then(reviews => res.json(reviews));
     } 
     catch (error) {
       console.error(error);
@@ -44,15 +44,20 @@ router
           user_id: req.body.user_id,
           book_id: req.body.book_id,
         })
-          .then(async () => {
-            await Book.findAll({
-              where: { id: req.body.book_id },
+        .then(async () => {
+          await Book.findAll({
+            where: { id: req.body.book_id },
+            include: [{
+              model: models.Review,
+              book_id: req.body.book_id,
               include: [{
-                model: models.Review,
-                book_id: req.body.book_id
+                model: models.User,
+                id: req.body.user_id,
+                attributes: ["email"]
               }]
-            })
-              .then(books => res.json(books))
+            }]
+          })
+          .then(books => res.json(books))
         })
       }
     }
@@ -78,15 +83,20 @@ router
             book_id: req.body.book_id
           }
         })
-          .then(async () => {
-            await Book.findAll({
-              where: { id: req.body.book_id },
+        .then(async () => {
+          await Book.findAll({
+            where: { id: req.body.book_id },
+            include: [{
+              model: models.Review,
+              book_id: req.body.book_id,
               include: [{
-                model: models.Review,
-                book_id: req.body.book_id
+                model: models.User,
+                id: req.body.user_id,
+                attributes: ["email"]
               }]
-            })
-              .then(books => res.json(books))
+            }]
+          })
+          .then(books => res.json(books))
         })
       } else {
         res.json("회원분이 작성한 리뷰가 아닙니다.")
@@ -110,12 +120,12 @@ router
           }
         }
       )
-        .then(async () => {
-          await Review.findAll({
-            where: { user_id: req.query.user_id },
-            include: { model: models.Book }
-          })
-            .then(reviews => res.send({ newReviews: reviews }));
+      .then(async () => {
+        await Review.findAll({
+          where: { user_id: req.query.user_id },
+          include: { model: models.Book }
+        })
+        .then(reviews => res.send({ newReviews: reviews }));
       });
     } 
     catch (error) {
@@ -123,31 +133,5 @@ router
       next(error);
     }
   })
-
-  // .put("/myscore", jsonParser, async (req, res) => {
-  //   try {
-  //     console.log("********** Myscore edit **********");
-
-  //     await Review.update(
-  //       { score: req.body.score },
-  //       { where: {
-  //           user_id: req.body.user_id,
-  //           book_id: req.body.book_id
-  //         }
-  //       }
-  //     )
-  //       .then(async () => {
-  //         await Review.findAll({
-  //           where: { user_id: req.body.user_id },
-  //           include: { model: models.Book }
-  //         })
-  //           .then(reviews => res.send({ newReviews: reviews }));
-  //     });
-  //   } 
-  //   catch (error) {
-  //     console.error(error);
-  //     next(error);
-  //   }
-  // });
 
 module.exports = router;

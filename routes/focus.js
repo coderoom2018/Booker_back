@@ -23,7 +23,7 @@ router
           id: req.query.book_id
         }
       })
-        .then(reviews => res.json(reviews));
+      .then(reviews => res.json(reviews));
     } 
     catch (error) {
       console.error(error);
@@ -44,18 +44,18 @@ router
           }
         }
       )
-        .then(async () => {
-          await Review.findAll({
-            where: {
-              user_id: req.query.user_id,
-              book_id: req.query.book_id
-            },
-            include: {
-              model: models.Book,
-              id: req.query.book_id
-            }
-          })
-            .then(review => res.send({ review }));
+      .then(async () => {
+        await Review.findAll({
+          where: {
+            user_id: req.query.user_id,
+            book_id: req.query.book_id
+          },
+          include: {
+            model: models.Book,
+            id: req.query.book_id
+          }
+        })
+        .then(review => res.send({ review }));
       });
     } 
     catch (error) {
@@ -76,12 +76,12 @@ router
           }
         }
       )
-        .then(
-          Review.findAll({
-            where: { user_id: req.body.user_id },
-            include: [{ model: models.Book }]
-          })
-            .then(reviews => res.json(reviews))
+      .then(
+        Review.findAll({
+          where: { user_id: req.body.user_id },
+          include: [{ model: models.Book }]
+        })
+        .then(reviews => res.json(reviews))
       )
     } 
     catch (error) {
