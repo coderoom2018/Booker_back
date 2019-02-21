@@ -41,8 +41,11 @@ router
           } 
         })
         .then(async () => {
-          await Bookmark.findAll({ include: [{ model: models.Book }] })
-          .then(bookmarks => res.send({ newBookmarks: bookmarks }))
+          await Bookmark.findAll({ 
+            where: { user_id: req.body.user_id },
+            include: [{ model: models.Book }]
+          })
+          .then(bookmarks => res.json(bookmarks))
         });
       } else {
         res.json("추가된 북마크가 없습니다")
