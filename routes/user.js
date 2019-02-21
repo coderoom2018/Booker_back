@@ -15,13 +15,13 @@ router
     try {
       console.log("**************** SIGN IN ***************");
 
-      if (await User.findAll({ 
+      if (await User.findOne({ 
         where: { 
           email: req.body.email,
           password: req.body.password 
         } 
       })) {
-        await User.find({ 
+        await User.findOne({ 
           where: { 
             email: req.body.email,
             password: req.body.password 
